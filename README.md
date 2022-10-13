@@ -10,6 +10,9 @@ Tagebuch und persönliches Tracking. Privat, verschlüsselt und vertraulich.
 - Verschlüsselung mit AES
 - In Planung: Synchronisation über WebDav
 
+## Herunterladen
+[Tagebuch - andJOG bei Google Play](https://play.google.com/store/apps/details?id=dev.bluekite.andjog)
+
 ## Erstellen und Ausführen
 Die Anwendung wurde mit Flutter entwickelt. Die Dokumentation von Flutter erklärt, wie man Anwendungen erstellt und ausführt: [Debugging Flutter apps](https://docs.flutter.dev/testing/debugging)
 

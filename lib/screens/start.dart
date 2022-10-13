@@ -4,8 +4,11 @@ import 'package:andjog/jog/settings.dart';
 import 'package:andjog/screens/home.dart';
 import 'package:andjog/screens/initial.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:local_auth/local_auth.dart';
 
 
 class StartScreen extends StatefulWidget {
@@ -39,8 +42,31 @@ class _StartScreenState extends State<StartScreen> {
     }
   }
 
+  Future _checkFingerprint() async {
+    final tr = AppLocalizations.of(context)!;
+    Settings settings = await loadSettings();
+    if(!settings.fingerprint) return;
+    if(!settings.passwords.containsKey(settings.recentlyUsed.last)) return;
+
+    final LocalAuthentication auth = LocalAuthentication();
+    
+    try {
+      bool permission = await auth.authenticate(localizedReason: tr.unlockDiary, options: const AuthenticationOptions(biometricOnly: true));
+      if(permission){
+        tecPassword.text = settings.passwords[settings.recentlyUsed.last]!;
+
+        if(!mounted) return;
+        unlockDiary(context);
+      }
+    } on PlatformException catch (e) {
+      debugPrint(e.code);
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   void initState() {
+    Future.delayed(const Duration(milliseconds: 500), _checkFingerprint);
     super.initState();
   }
 

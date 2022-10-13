@@ -96,5 +96,11 @@
     "openSourceLibraries": "Open Source Bibliotheken",
     "cantRemoveCategory": "Kategorie kann nicht entfernt werden, da sie von mindestens einem Eintrag verwendet wird.",
     "closeDiary": "Tagebuch schließen",
-    "lock": "Sperren"
+    "lock": "Sperren",
+    "unlockDiary": "Tagebuch entsperren",
+    "fingerprint": "Fingerabdruck",
+    "unlockFingerprint": "Mit Fingerabdruck entsperren",
+    "unlockFingerprintInfo": "Um das Tagebuch mit Ihrem Fingerabdruck zu entsperren, wird das Passwort in klartext lokal auf dem Gerät gespeichert. Dies reduziert die Sicherheit des Tagebuchs stark.",
+    "enableFingerprint": "Aktiviere \"Mit Fingerabdruck entsperren\"",
+    "fingerprintUnavailable": "Fingerabdruck auf diesem Gerät nicht verfügbar."
 }

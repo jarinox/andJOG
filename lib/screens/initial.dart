@@ -19,7 +19,7 @@ class InitialScreen extends StatefulWidget {
 }
 
 class _InitialScreenState extends State<InitialScreen> {
-  Settings settings = Settings("auto", "mon", []);
+  Settings settings = Settings("auto", "mon", [], false, {});
 
   @override
   void initState() {

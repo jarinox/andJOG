@@ -96,5 +96,11 @@
     "openSourceLibraries": "Open Source Libraries",
     "cantRemoveCategory": "Can't remove category as it is used by at least one entry.",
     "closeDiary": "Close diary",
-    "lock": "Lock"
+    "lock": "Lock",
+    "unlockDiary": "Unlock diary",
+    "fingerprint": "Fingerprint",
+    "unlockFingerprint": "Unlock using fingerprint",
+    "unlockFingerprintInfo": "Using your fingerprint to unlock the diary is less save as the password has to be stored in plaintext on this device.",
+    "enableFingerprint": "Enable \"Unlock using fingerprint\"",
+    "fingerprintUnavailable": "Fingerprint not supported on this device."
 }

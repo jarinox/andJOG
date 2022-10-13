@@ -7,6 +7,9 @@ import 'package:andjog/jog/jog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'package:local_auth/local_auth.dart';
+import 'package:flutter/services.dart';
+
 
 class CreateNewDiaryScreen extends StatefulWidget {
   const CreateNewDiaryScreen({Key? key}) : super(key: key);
@@ -40,6 +43,7 @@ class _CreateNewDiaryScreenState extends State<CreateNewDiaryScreen> {
   TextEditingController tecStandardCategory = TextEditingController(text: "personal");
 
   bool _useSync = false;
+  bool _useFingerprint = false;
 
 
   void createDiary(BuildContext context) async {
@@ -62,7 +66,13 @@ class _CreateNewDiaryScreenState extends State<CreateNewDiaryScreen> {
     });
 
     await saveDiary(diary);
+
     Settings settings = await loadSettings();
+    settings.fingerprint = _useFingerprint;
+    if(_useFingerprint){
+      settings.passwords[diary.name] = diary.password;
+    }
+
     settings.recentlyUsed.add("diary${i.toString()}");
     await saveSettings(settings);
     
@@ -86,6 +96,7 @@ class _CreateNewDiaryScreenState extends State<CreateNewDiaryScreen> {
   @override
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
+    final LocalAuthentication auth = LocalAuthentication();
 
     return Scaffold(
       appBar: AppBar(
@@ -107,7 +118,12 @@ class _CreateNewDiaryScreenState extends State<CreateNewDiaryScreen> {
                 _stepIndex++;
               });
             }
-          }*/ else if(_stepIndex == 1){
+          }*/
+          else if(_stepIndex == 1){
+            setState(() {
+              _stepIndex++;
+            });
+          } else if(_stepIndex == 2){
             createDiary(context);
           }
         },
@@ -169,6 +185,44 @@ class _CreateNewDiaryScreenState extends State<CreateNewDiaryScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+
+
+          Step(
+            title: Text(tr.fingerprint),
+            content: Column(
+              children: [
+                SwitchListTile(
+                  secondary: const Icon(Icons.fingerprint),
+                  title: Text(tr.unlockFingerprint),
+                  value: _useFingerprint,
+                  onChanged: (newValue) async {
+                    if(newValue){
+                      try {
+                        bool permission = await auth.authenticate(localizedReason: tr.enableFingerprint, options: const AuthenticationOptions(biometricOnly: true));
+                        if(!permission) return;
+                      } on PlatformException catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(tr.fingerprintUnavailable),
+                          ),
+                        );
+                        return;
+                      }
+                    }
+                    
+                    if(!mounted) return;
+                    setState(() {
+                      _useFingerprint = newValue;
+                    });
+                  },
+                ),
+
+                ListTile(
+                  subtitle: Text(tr.unlockFingerprintInfo),
+                ),
+              ],
             ),
           ),
 

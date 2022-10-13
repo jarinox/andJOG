@@ -10,8 +10,12 @@ import 'package:path/path.dart' as p;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'package:local_auth/local_auth.dart';
+
 
 
 class SettingsScreen extends StatefulWidget {
@@ -36,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
+    final LocalAuthentication auth = LocalAuthentication();
 
     return Scaffold(
       appBar: AppBar(
@@ -113,6 +118,43 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => ChangePasswordScreen(widget.diary))
               );
+            },
+          ),
+
+          const Divider(height: 4.0),
+
+          SwitchListTile(
+            secondary: const Icon(Icons.fingerprint),
+            title: Text(tr.unlockFingerprint),
+            //subtitle: Text(tr.unlockFingerprintInfo, overflow: TextOverflow.ellipsisr,),
+            value: widget.settings.fingerprint,
+            onChanged: (newValue) async {
+              if(newValue){
+                try {
+                  bool permission = await auth.authenticate(localizedReason: tr.enableFingerprint, options: const AuthenticationOptions(biometricOnly: true));
+                  if(!permission) return;
+                } on PlatformException catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(tr.fingerprintUnavailable),
+                    ),
+                  );
+                  return;
+                }
+              }
+
+              if(!mounted) return;
+              setState(() {
+                widget.settings.fingerprint = newValue;
+              });
+
+              if(newValue){
+                widget.settings.passwords[widget.diary.name] = widget.diary.password;
+              } else {
+                widget.settings.passwords.remove(widget.diary.name);
+              }
+
+              saveSettings(widget.settings);
             },
           ),
 

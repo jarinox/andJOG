@@ -70,6 +70,11 @@ class LicensesScreen extends StatelessWidget {
             subtitle: Text("Apache-2.0 License\nCopyright 2018 the Charts project authors."),
           ),
 
+          ListTile(
+            title: Text("local_auth"),
+            subtitle: Text("BSD-3-Clause License\nCopyright 2013 The Flutter Authors.\nAll rights reserved."),
+          ),
+
           SizedBox(height: 40.0,),
 
           ListTile(

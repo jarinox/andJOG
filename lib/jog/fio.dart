@@ -64,7 +64,7 @@ Future<Settings> loadSettings() async {
       await f.readAsString()
     );
   } else {
-    return Settings("auto", "mon", []);
+    return Settings("auto", "mon", [], false, {});
   }
 }
 
