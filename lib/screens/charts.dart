@@ -2,6 +2,7 @@ import 'package:andjog/jog/jog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 
 
 class PointOnLine {
@@ -32,15 +33,24 @@ class ChartsScreen extends StatefulWidget {
 class _ChartsScreenState extends State<ChartsScreen> {
   List<bool> showTracker = [];
   List<PointOnLine> trackerList = [];
+  DateTime? firstDate;
+  DateTime? lastDate;
+  String? changeRange;
 
   @override
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
+
+    if(firstDate == null){
+      firstDate =  widget.diary.entries.first.createdAt;
+      lastDate = widget.diary.entries.last.createdAt;
+      changeRange = tr.changeDateRange;
+    }
     List<charts.Series<dynamic, DateTime>> listSeries = [];
     Map<String, List> data = {};
 
     for (Entry entry in widget.diary.entries){
-      if(entry.other.containsKey("tracking")){
+      if(entry.other.containsKey("tracking") && firstDate!.compareTo(entry.createdAt) != 1 && lastDate!.compareTo(entry.createdAt.add(const Duration(days: -1))) != -1){
         for(Map tracker in entry.other["tracking"]){
           if(!data.containsKey(tracker["type"] + ":" + tracker["title"])){
             data[tracker["type"] + ":" + tracker["title"]] = [];
@@ -125,6 +135,34 @@ class _ChartsScreenState extends State<ChartsScreen> {
               ],
               dateTimeFactory: const charts.LocalDateTimeFactory(),
             )
+          ),
+
+
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                DateTimeRange? range = await showDateRangePicker(
+                  context: context,
+                  firstDate: widget.diary.entries.first.createdAt,
+                  lastDate: widget.diary.entries.last.createdAt,
+                  initialEntryMode: DatePickerEntryMode.input,
+                  initialDateRange: DateTimeRange(start: firstDate!, end: lastDate!),
+                  currentDate: DateTime.now(),
+                );
+
+                if(range != null){
+                  setState(() {
+                    firstDate = range.start;
+                    lastDate = range.end;
+
+                    changeRange = "${DateFormat(tr.dateFormat, tr.localeName).format(firstDate!)} ${tr.toLower} ${DateFormat(tr.dateFormat, tr.localeName).format(lastDate!)}";
+                  });
+                }
+              },
+              icon: const Icon(Icons.date_range),
+              label: Text(changeRange!),
+            ),
           ),
 
           const SizedBox(height: 18.0),

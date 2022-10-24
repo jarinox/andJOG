@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:andjog/jog/fio.dart';
 import 'package:andjog/jog/jog.dart';
 import 'package:andjog/jog/settings.dart';
@@ -268,12 +269,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
             leading: const Icon(Icons.factory),
             title: const Text("Entry factory"),
             onTap: () async {
+              DateTime time = DateTime.now();
               for(int i = 0; i < 100; ++i){
+                time = time.subtract([const Duration(days: 1), const Duration(days: 1), const Duration(days: 2), const Duration(days: 2), const Duration(days: 3), const Duration(days: 4), const Duration(seconds: 1)][Random().nextInt(7)]);
                 widget.diary.addEntry(Entry(
-                  1234,
+                  1234+i,
                   0,
-                  "This is some sample text",
-                  DateTime.now(),
+                  [
+                    "Lorem ipsum dolor sit amet consectetur adipiscing elit, urna consequat felis vehicula class ultricies mollis dictumst, aenean non a in donec nulla. Phasellus ante pellentesque erat cum risus consequat imperdiet aliquam, integer placerat et turpis mi eros nec lobortis taciti, vehicula nisl litora tellus ligula porttitor metus.",
+                    "Vivamus integer non suscipit taciti mus etiam at primis tempor sagittis sit, euismod libero facilisi aptent elementum felis blandit cursus gravida sociis erat ante, eleifend lectus nullam dapibus netus feugiat curae curabitur est ad. Massa curae fringilla porttitor quam sollicitudin iaculis aptent leo ligula euismod dictumst, orci penatibus mauris eros etiam praesent erat volutpat posuere hac.",
+                    "Metus fringilla nec ullamcorper odio aliquam lacinia conubia mauris tempor, etiam ultricies proin quisque lectus sociis id tristique, integer phasellus taciti pretium adipiscing tortor sagittis ligula.",
+                    "Mollis pretium lorem primis senectus habitasse lectus scelerisque donec, ultricies tortor suspendisse adipiscing fusce morbi volutpat pellentesque, consectetur mi risus molestie curae malesuada cum. Dignissim lacus convallis massa mauris enim ad mattis magnis senectus montes, mollis taciti phasellus accumsan bibendum semper blandit suspendisse faucibus nibh est, metus lobortis morbi cras magna vivamus per risus fermentum.",
+                    "Dapibus imperdiet praesent magnis ridiculus congue gravida curabitur dictum sagittis, enim et magna sit inceptos sodales parturient pharetra mollis, aenean vel nostra tellus commodo pretium sapien sociosqu.",
+                    "Dignissim lacus convallis massa mauris enim ad mattis magnis senectus montes, mollis taciti phasellus accumsan bibendum semper blandit suspendisse faucibus nibh est, metus lobortis morbi cras magna vivamus per risus fermentum. Dapibus imperdiet praesent magnis ridiculus congue gravida curabitur dictum sagittis, enim et magna sit inceptos sodales parturient pharetra mollis, aenean vel nostra tellus commodo pretium sapien sociosqu.",
+                    "Habitasse magnis mauris rutrum malesuada vivamus porta sit praesent, et ornare justo egestas potenti phasellus cum elementum nisi, molestie nullam tortor blandit felis placerat porttitor. Malesuada elementum ante vestibulum augue vulputate penatibus netus mollis pretium libero, aptent tristique hendrerit accumsan metus arcu viverra ipsum eleifend parturient, dictumst tempus primis interdum sagittis porttitor luctus et suspendisse.",
+                    "Cubilia dictum nisl platea id volutpat pretium scelerisque suspendisse velit nisi pulvinar dictumst, gravida potenti penatibus massa suscipit mollis magnis phasellus aptent consequat elit, auctor varius pharetra urna blandit ultrices orci molestie accumsan quam tempor.",
+                    "Ante est montes augue faucibus ultrices habitasse penatibus fermentum, eros massa iaculis turpis nisi maecenas venenatis, ad tristique suscipit egestas vestibulum mattis etiam. Diam turpis venenatis ligula condimentum montes, sagittis dis sollicitudin nunc lorem, id consequat duis justo. ",
+                    "Vitae vulputate montes non vestibulum tristique sapien hac netus risus, ornare molestie pulvinar sed auctor condimentum metus natoque, neque nisi volutpat fusce lobortis felis tempor magnis.",
+                    "Turpis pulvinar mattis in proin dui elementum sit habitasse, penatibus dictum duis convallis ullamcorper egestas fermentum a vehicula, auctor lobortis libero blandit ultrices taciti eu. Habitant euismod aliquam imperdiet purus cum duis in varius mus vivamus sodales enim, vehicula blandit eu iaculis condimentum commodo libero integer nullam senectus cubilia.",
+                    "Praesent augue massa placerat nisi nibh mauris sollicitudin mi nisl, nascetur tempor phasellus taciti conubia in aliquet hac vulputate sed, non est dictumst consectetur tempus porta ante sit. Inceptos parturient elit metus nunc scelerisque aliquam laoreet praesent rutrum, sociis ipsum nisi proin cursus faucibus sollicitudin gravida etiam, hendrerit dis tristique erat ornare tortor porttitor tellus.",
+                    "Nostra sem magna lorem felis orci risus posuere sagittis litora, facilisi eget ultricies egestas sociosqu montes interdum enim, tristique nunc in nascetur vel accumsan purus placerat. Class nam sagittis pretium quis tristique risus justo nisi penatibus, habitasse semper lectus accumsan sem natoque facilisi augue, molestie nascetur curae nisl vel ornare odio sit. ",
+                    "Donec pharetra natoque vehicula fermentum penatibus hendrerit condimentum aenean, vitae magna auctor odio nisi sapien magnis, ut integer hac venenatis eget habitasse mi. "
+                  ][Random().nextInt(14)],
+                  time,
                   [],
                   widget.diary.settings["tracking"]["enabled"] ? {"tracking":widget.diary.settings["tracking"]["quests"]} : {}
                 ));

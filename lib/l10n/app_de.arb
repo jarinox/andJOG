@@ -102,5 +102,9 @@
     "unlockFingerprint": "Mit Fingerabdruck entsperren",
     "unlockFingerprintInfo": "Um das Tagebuch mit Ihrem Fingerabdruck zu entsperren, wird das Passwort in klartext lokal auf dem Gerät gespeichert. Dies reduziert die Sicherheit des Tagebuchs stark.",
     "enableFingerprint": "Aktiviere \"Mit Fingerabdruck entsperren\"",
-    "fingerprintUnavailable": "Fingerabdruck auf diesem Gerät nicht verfügbar."
+    "fingerprintUnavailable": "Fingerabdruck auf diesem Gerät nicht verfügbar.",
+    "changeDateRange": "Zeitraum ändern",
+    "from": "Von",
+    "to": "Bis",
+    "toLower": "bis"
 }

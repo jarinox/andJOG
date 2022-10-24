@@ -102,5 +102,9 @@
     "unlockFingerprint": "Unlock using fingerprint",
     "unlockFingerprintInfo": "Using your fingerprint to unlock the diary is less save as the password has to be stored in plaintext on this device.",
     "enableFingerprint": "Enable \"Unlock using fingerprint\"",
-    "fingerprintUnavailable": "Fingerprint not supported on this device."
+    "fingerprintUnavailable": "Fingerprint not supported on this device.",
+    "changeDateRange": "Change date range",
+    "from": "From",
+    "to": "To",
+    "toLower": "to"
 }
