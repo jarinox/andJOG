@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:andjog/jog/settings.dart';
+import 'package:flutter/foundation.dart' as foundation;
 import 'package:path/path.dart' as p;
 import 'package:encrypt/encrypt.dart';
 import 'package:crypto/crypto.dart';
@@ -11,6 +12,70 @@ import 'package:path_provider/path_provider.dart';
 Future<String> get appDir async {
   final dir = await getApplicationDocumentsDirectory();
   return dir.path;
+}
+
+Future<String> addFileToMedia(String originalPath, String password) async {
+  final File file = File(originalPath);
+  final List<int> bytes = await file.readAsBytes();
+  final String hash = sha256.convert(bytes).toString();
+
+  // copy file to app directory and rename it to hash
+  final String newPath = p.join(await appDir, "media", "$hash");
+
+  final dir = Directory(p.join(await appDir, "media"));
+  if (!await dir.exists()){
+    await dir.create();
+  }
+
+  String encs = await foundation.compute((List message) {
+    final List<int> bytes = message[0];
+    final String password = message[1];
+
+    Key key = Key.fromBase64(base64Encode(sha256.convert(utf8.encode(password)).bytes));
+    final encrypter = Encrypter(AES(key));
+
+    final IV iv = IV.fromLength(16);
+
+    final Encrypted encrypted = encrypter.encryptBytes(bytes, iv: iv);
+
+    return "${iv.base64}\n${encrypted.base64}";
+  }, [bytes, password]);
+
+  final File newFile = File(newPath);
+  await newFile.writeAsString(encs);
+
+  return hash;
+}
+
+Future<List<int>?> getBytesFromMedia(String hash, String password) async {
+  final String path = p.join(await appDir, "media", hash);
+  final File file = File(path);
+  if(await file.exists()){
+    final String encString = await file.readAsString();
+
+    return await foundation.compute((List params) {
+      final String encString = params[0];
+      final String password = params[1];
+
+      final List<String> encData = encString.split("\n");
+      Key key = Key.fromBase64(base64Encode(sha256.convert(utf8.encode(password)).bytes));
+      final encrypter = Encrypter(AES(key));
+
+      final IV iv = IV.fromBase64(encData[0]);
+      final encrypted = Encrypted.fromBase64(encData[1]);
+
+      final List<int> bytes = encrypter.decryptBytes(encrypted, iv: iv);
+      return bytes;
+    }, [encString, password]);
+    
+  }
+  return null;
+}
+
+Future<void> deleteFileFromMedia(String hash) async {
+  final String path = p.join(await appDir, "media", hash);
+  final File file = File(path);
+  file.delete();
 }
 
 

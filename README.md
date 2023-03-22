@@ -7,6 +7,7 @@ Tagebuch und persönliches Tracking. Privat, verschlüsselt und vertraulich.
   - Selbst definierte Attribute nachverfolgen
   - Getrackt können Zahlenwerte, Ja/Nein und Slider werden
   - Darstellung des Fortschritts mithilfe von Diagrammen
+- Bilder als Anhang hinzufügen
 - Verschlüsselung mit AES
 - In Planung: Synchronisation über WebDav
 
@@ -25,4 +26,4 @@ flutter run
 ## Über
 andJOG ist freie Software und unterliegt der GNU GPL v3 Lizenz.  
 Die Entwickler übernehmen keine Haftung für jegliche Schäden und Datenverlusste, die durch die Benutzung der Software auftreten. Die Benutzung der Software erfolgt auf eigene Gefahr.  
-Copyright 2021-2022 Jakob Stolze
+Copyright 2021-2023 Jakob Stolze

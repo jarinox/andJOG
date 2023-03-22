@@ -33,7 +33,7 @@
     "deselect": "Deselect",
     "dateFormat": "MM/dd/yyyy",
     "noEntriesFound": "No entries found.",
-    "warning": "Warnung!",
+    "warning": "Warning!",
     "confirmDeleteEntry": "Do you really want to delete this entry?",
     "confirmDeleteEntries": "Do you really want to delete these entries?",
     "yes": "Yes",
@@ -42,7 +42,7 @@
     "changeDate": "Change date",
     "dearDiary": "Dear diary, today I've...",
     "save": "Save",
-    "addAttachement": "Add attachement",
+    "addAttachment": "Add attachment",
     "tracking": "Tracking",
     "theme": "Theme",
     "lightTheme": "Light",
@@ -92,7 +92,7 @@
     "veryBad": "Very bad",
     "newTracker": "New tracker",
     "charts": "Charts",
-    "copyright": "andJOG - Diary\nCopyright 2021-2022 Jakob Stolze\n\nEmail: info@bluekite.dev\n\nThe source code of this application is Open-Source and licensed under the terms of GNU General Public License Version 3.\n\nThe source code is available at\nhttps://github.com/jarinox/andJOG",
+    "copyright": "andJOG - Diary\nCopyright 2021-2023 Jakob Stolze\n\nEmail: bluekitedev@gmail.com\n\nThe source code of this application is Open-Source and licensed under the terms of GNU General Public License Version 3.\n\nThe source code is available at\nhttps://github.com/jarinox/andJOG",
     "openSourceLibraries": "Open Source Libraries",
     "cantRemoveCategory": "Can't remove category as it is used by at least one entry.",
     "closeDiary": "Close diary",
@@ -106,5 +106,10 @@
     "changeDateRange": "Change date range",
     "from": "From",
     "to": "To",
-    "toLower": "to"
+    "toLower": "to",
+    "more": "More",
+    "addCurrentLocation": "Add current location",
+    "addImage": "Add image",
+    "takePicture": "Take a picture",
+    "back": "Back"
 }

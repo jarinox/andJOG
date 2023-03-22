@@ -42,7 +42,7 @@
     "changeDate": "Datum ändern",
     "dearDiary": "Liebes Tagebuch, heute habe ich...",
     "save": "Speichern",
-    "addAttachement": "Anhang hinzufügen",
+    "addAttachment": "Anhang hinzufügen",
     "tracking": "Tracking",
     "theme": "Farbschema",
     "lightTheme": "Hell",
@@ -92,7 +92,7 @@
     "veryBad": "Sehr schlecht",
     "newTracker": "Neuer Tracker",
     "charts": "Diagramme",
-    "copyright": "andJOG - Tagebuch\nCopyright 2021-2022 Jakob Stolze\n\nEmail: info@bluekite.dev\n\nDer Quellcode dieser App ist Open-Source und untersteht den Lizenzbedingungen der GNU General Public License Version 3.\n\nDer Quellcode ist frei verfügbar unter\nhttps://github.com/jarinox/andJOG",
+    "copyright": "andJOG - Tagebuch\nCopyright 2021-2023 Jakob Stolze\n\nEmail: bluekitedev@gmail.com\n\nDer Quellcode dieser App ist Open-Source und untersteht den Lizenzbedingungen der GNU General Public License Version 3.\n\nDer Quellcode ist frei verfügbar unter\nhttps://github.com/jarinox/andJOG",
     "openSourceLibraries": "Open Source Bibliotheken",
     "cantRemoveCategory": "Kategorie kann nicht entfernt werden, da sie von mindestens einem Eintrag verwendet wird.",
     "closeDiary": "Tagebuch schließen",
@@ -106,5 +106,10 @@
     "changeDateRange": "Zeitraum ändern",
     "from": "Von",
     "to": "Bis",
-    "toLower": "bis"
+    "toLower": "bis",
+    "more": "Mehr",
+    "addCurrentLocation": "Aktuellen Standord hinzufügen",
+    "addImage": "Bild hinzufügen",
+    "takePicture": "Bild aufnehmen",
+    "back": "Zurück"
 }

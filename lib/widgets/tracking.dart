@@ -21,7 +21,6 @@ class _TrackingListWidgetState extends State<TrackingListWidget> {
     List<Widget> quests = [];
 
     for(int i = 0; i < mEntry.other["tracking"].length; ++i){
-      int tecsIndex = 0;
       Map q = widget.entry.other["tracking"][i];
       if(q["type"] == "bool"){
         quests.add(
@@ -99,7 +98,7 @@ class _TrackingListWidgetState extends State<TrackingListWidget> {
                   width: 70.0,
                   child: TextField(
                     textAlign: TextAlign.center,
-                    controller: tecs[tecsIndex],
+                    controller: tec,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -113,8 +112,6 @@ class _TrackingListWidgetState extends State<TrackingListWidget> {
             ),
           ),
         );
-
-        tecsIndex++;
       }
     }
 

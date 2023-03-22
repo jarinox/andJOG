@@ -61,6 +61,10 @@ class Diary {
     }
 
     entries.add(entry);
+    sortEntries();
+  }
+
+  void sortEntries(){
     entries.sort((a, b){
       return a.createdAt.compareTo(b.createdAt);
     });

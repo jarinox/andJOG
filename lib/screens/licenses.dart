@@ -16,6 +16,10 @@ class LicensesScreen extends StatelessWidget {
       body: ListView(
         children: const [
           ListTile(
+            title: Text("This application was made using Flutter and uses the following packages from pub.dev"),
+          ),
+
+          ListTile(
             title: Text("http"),
             subtitle: Text("BSD-3-Clause License\nCopyright 2014, the Dart project authors."),
           ),
@@ -73,6 +77,16 @@ class LicensesScreen extends StatelessWidget {
           ListTile(
             title: Text("local_auth"),
             subtitle: Text("BSD-3-Clause License\nCopyright 2013 The Flutter Authors.\nAll rights reserved."),
+          ),
+
+          ListTile(
+            title: Text("location"),
+            subtitle: Text("MIT License\nCopyright (c) 2017, Guillaume Bernos."),
+          ),
+
+          ListTile(
+            title: Text("image_picker"),
+            subtitle: Text("BSD-3-Clause License\nCopyright 2013 The Flutter Authors. All rights reserved."),
           ),
 
           SizedBox(height: 40.0,),

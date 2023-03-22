@@ -253,6 +253,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 }
               }
 
+              Directory(p.join(dir, "media")).deleteSync(recursive: true);
+
               settings.recentlyUsed = [];
               settings.colorMode = "auto";
               settings.firstDay = "mon";

@@ -7,12 +7,29 @@ import 'package:intl/intl.dart';
 
 class PointOnLine {
   final DateTime time;
+  final String type;
   final String track;
   final String title;
-  final int trackID;
   final num value;
+  final int trackID;
 
-  PointOnLine(this.time, this.track, this.trackID, this.title, this.value);
+  PointOnLine(this.time, this.type, this.track, this.title, this.value, this.trackID);
+}
+
+class BooleanTracker {
+  final String title;
+  final double averageValue;
+
+  BooleanTracker(this.title, this.averageValue);
+}
+
+class ChartTracker {
+  final String title;
+  final List<PointOnLine> points;
+  final int id;
+  bool show = true;
+
+  ChartTracker(this.title, this.points, this.id);
 }
 
 List colors = [charts.MaterialPalette.blue.shadeDefault, charts.MaterialPalette.red.shadeDefault, charts.MaterialPalette.green.shadeDefault, charts.MaterialPalette.cyan.shadeDefault, charts.MaterialPalette.deepOrange.shadeDefault, charts.MaterialPalette.lime.shadeDefault];
@@ -20,7 +37,6 @@ List colors = [charts.MaterialPalette.blue.shadeDefault, charts.MaterialPalette.
 dynamic genColor(int i){
   return colors[i % colors.length];
 }
-
 
 class ChartsScreen extends StatefulWidget {
   final Diary diary;
@@ -32,8 +48,7 @@ class ChartsScreen extends StatefulWidget {
 
 class _ChartsScreenState extends State<ChartsScreen> {
   List<bool> showTracker = [];
-  List<PointOnLine> trackerList = [];
-  List booleanTrackers = [];
+
   DateTime? firstDate;
   DateTime? lastDate;
   String? changeRange;
@@ -47,73 +62,80 @@ class _ChartsScreenState extends State<ChartsScreen> {
       lastDate = widget.diary.entries.last.createdAt;
       changeRange = tr.changeDateRange;
     }
-    List<charts.Series<dynamic, DateTime>> listSeries = [];
-    Map<String, List> data = {};
 
+    List<charts.Series<dynamic, DateTime>> listSeries = [];
+    List<BooleanTracker> booleanTrackers = [];
+
+    Map<String, ChartTracker> chartLines = {};
+
+    int i = 0;
     for (Entry entry in widget.diary.entries){
       if(entry.other.containsKey("tracking") && firstDate!.compareTo(entry.createdAt) != 1 && lastDate!.compareTo(entry.createdAt.add(const Duration(days: -1))) != -1){
         for(Map tracker in entry.other["tracking"]){
-          if(!data.containsKey(tracker["type"] + ":" + tracker["title"])){
-            data[tracker["type"] + ":" + tracker["title"]] = [];
+          if(!chartLines.containsKey(tracker["type"] + ":" + tracker["title"])){
+            chartLines[tracker["type"] + ":" + tracker["title"]] = ChartTracker(tracker["title"], [], i++);
           }
-          data[tracker["type"] + ":" + tracker["title"]]!.add([tracker, entry]);
+
+          chartLines[tracker["type"] + ":" + tracker["title"]]!.points.add(
+            PointOnLine(
+              entry.createdAt,
+              tracker["type"],
+              tracker["type"] + ":" + tracker["title"],
+              tracker["title"],
+              tracker["type"] == "bool" ? (tracker["value"] ? 1 : 0) : double.parse(tracker["value"].toString()),
+              chartLines[tracker["type"] + ":" + tracker["title"]]!.id,
+            )
+          );
         }
       }
     }
 
-    int i = 0;
-    for(String key in data.keys){
-      List<PointOnLine> dt = [];
-      for(List item in data[key]!){
-        if(item[0]["type"] == "number"){
-          dt.add(
-            PointOnLine(item[1].createdAt, key, i, item[0]["title"], double.parse(item[0]["value"]))
-          );
-        }
+    List<String> removeKeys = [];
 
-        if(item[0]["type"] == "slider"){
-          dt.add(
-            PointOnLine(item[1].createdAt, key, i, item[0]["title"], double.parse(item[0]["value"].toString()))
-          );
+    bool showTrackerEmpty = showTracker.isEmpty;
+
+    i = 0;
+    for (String key in chartLines.keys){
+      if (chartLines[key]!.points[0].type == "bool"){
+        double averageValue = 0;
+        for (PointOnLine point in chartLines[key]!.points){
+          averageValue += point.value;
         }
+        averageValue /= chartLines[key]!.points.length;
+
+        booleanTrackers.add(
+          BooleanTracker(
+            chartLines[key]!.points[0].title,
+            averageValue,
+          )
+        );
+
+        removeKeys.add(key); // for displaying toggle switches only for chart lines
+        continue;
       }
 
-      if(dt.isNotEmpty){
-        if(showTracker.isEmpty){
-          listSeries.add(
-            charts.Series(
-              id: key,
-              colorFn: (a, _) {
-                return genColor(a.trackID);
-              },
-              domainFn: (point, _) => point!.time,
-              measureFn: (point, _) => point!.value,
-              data: dt,
-            ),
-          );
-        }
-        else if(showTracker[i]){
-          listSeries.add(
-            charts.Series(
-              id: key,
-              colorFn: (a, _) {
-                return genColor(a.trackID);
-              },
-              domainFn: (point, _) => point!.time,
-              measureFn: (point, _) => point!.value,
-              data: dt,
-            ),
-          );
-        }
-        i += 1;
+      if (showTrackerEmpty) showTracker.add(true);
+
+      if(showTracker[i] == false){
+        i++;
+        continue;
       }
+
+      listSeries.add(
+        charts.Series<PointOnLine, DateTime>(
+          id: key,
+          colorFn: (a, _) => genColor(a.trackID),
+          domainFn: (PointOnLine point, _) => point.time,
+          measureFn: (PointOnLine point, _) => point.value,
+          data: chartLines[key]!.points,
+        )
+      );
+
+      i++;
     }
 
-    if(showTracker.isEmpty){
-      for(int i = 0; i < listSeries.length; ++i){
-        showTracker.add(true);
-        trackerList.add(listSeries[i].data[0]);
-      }
+    for (String key in removeKeys){
+      chartLines.remove(key);
     }
 
     return Scaffold(
@@ -137,7 +159,6 @@ class _ChartsScreenState extends State<ChartsScreen> {
               dateTimeFactory: const charts.LocalDateTimeFactory(),
             )
           ),
-
 
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -171,8 +192,9 @@ class _ChartsScreenState extends State<ChartsScreen> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: trackerList.length,
+            itemCount: chartLines.length,
             itemBuilder: (context, index){
+              ChartTracker tracker = chartLines.values.toList()[index];
               return ListTile(
                 leading: Center(
                   widthFactor: 1.0,
@@ -181,11 +203,11 @@ class _ChartsScreenState extends State<ChartsScreen> {
                     height: 16.0,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: [Colors.blue, Colors.red, Colors.green, Colors.cyan, Colors.deepOrange, Colors.lime][trackerList[index].trackID % 6],
+                      color: [Colors.blue, Colors.red, Colors.green, Colors.cyan, Colors.deepOrange, Colors.lime][tracker.id % 6],
                     ),
                   ),
                 ),
-                title: Text(trackerList[index].title),
+                title: Text(tracker.title),
 
                 trailing: Switch(
                   value: showTracker[index],
@@ -198,8 +220,28 @@ class _ChartsScreenState extends State<ChartsScreen> {
               );
             },
           ),
+
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: booleanTrackers.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: Center(
+                  widthFactor: 1.0,
+                  child: Container(
+                    width: 34.0,
+                    height: 16.0,
+                    child: Text("${(booleanTrackers[index].averageValue*100).toStringAsFixed(0)} %"),
+                  ),
+                ),
+                title: Text(booleanTrackers[index].title),
+              );              
+            },
+          ),
         ],
       ),
     );
   }
+
 }

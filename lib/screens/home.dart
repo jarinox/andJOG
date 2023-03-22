@@ -3,7 +3,7 @@ import 'package:andjog/jog/jog.dart';
 import 'package:andjog/jog/jog_utils.dart';
 import 'package:andjog/jog/settings.dart';
 import 'package:andjog/screens/about.dart';
-import 'package:andjog/screens/charts.dart';
+import 'package:andjog/screens/charts_refactored.dart';
 import 'package:andjog/screens/edit_entry.dart';
 import 'package:andjog/screens/settings.dart';
 import 'package:andjog/screens/start.dart';
@@ -101,6 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
           TextButton(
             onPressed: () async {
               for(Entry e in selectedEntries){
+                for(String hash in e.other['images']){
+                  await deleteFileFromMedia(hash);
+                }
                 diary.entries.remove(e);
               }
 
@@ -257,12 +260,23 @@ class _HomeScreenState extends State<HomeScreen> {
 
           actions: [
             selectedEntries.length == 1 ? IconButton(
-              onPressed: (){
-                Navigator.of(context).push(
+              onPressed: () async {
+                await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EntryEditorScreen(diary, diary.entries.indexOf(selectedEntries[0]))
                   )
                 );
+
+                selectedEntries.clear();
+
+                Diary? d = await loadDiary(diary.name, diary.password);
+
+                if(d != null){
+                  diary = d;
+                  setState(() {
+                    updateFilteredEntries();
+                  });
+                }
               },
               tooltip: tr.edit,
               icon: const Icon(Icons.edit)
